@@ -1,0 +1,113 @@
+/* 居中表格 */
+.centered-table {
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 60px;
+}
+.form-container {
+    display: flex;
+    justify-content: space-around; /* 这会使子元素平均分布在容器中 */
+    align-items: center; /* 这会使子元素垂直居中 */
+}
+
+.form-login,
+.form-register {
+    margin: 0; /* 移除默认的外边距 */
+}
+
+/* 您还可以添加更多的样式来美化您的表单，例如： */
+input[type="text"],
+input[type="password"] {
+    padding: 0.5em;
+    margin-bottom: 1em; /* 为输入框添加一些间距 */
+}
+
+button {
+    padding: 0.5em 1em;
+    margin-left: -10px;
+    background-color: #4CAF50; /* 一个示例颜色 */
+    color: white;
+    border: none;
+    border-radius: 4px; /* 添加一点圆角 */
+    cursor: pointer; /* 将鼠标光标变成指针 */
+}
+
+button:hover {
+    background-color: #45a049; /* 鼠标悬停时的颜色变化 */
+}
+
+h1{
+    margin-top: 20px;
+    color: #000;
+}
+input{
+    margin-bottom: 40px;
+}
+body{
+    text-align: center;
+}
+/* 表格样式 */
+.centered-table {
+    border-collapse: collapse; /* 确保边框合并 */
+}
+
+.centered-table th, .centered-table td {
+    border: 1px solid black; /* 单边框 */
+    padding: 10px; /* 单元格内边距 */
+    text-align: center; /* 文本居中对齐 */
+}
+
+
+/* 图片样式 */
+.centered-table img {
+    max-width: 100px; /* 图片最大宽度 */
+    max-height: 100px; /* 图片最大高度 */
+    display: block; /* 移除底部空白 */
+    margin: 0 auto; /* 图片水平居中 */
+}
+/* 样式化模态对话框 */
+.modal {
+    display: none; /* 初始状态为隐藏 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+#myModal2{
+    display: none; /* 初始状态为隐藏 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+.modal-content {
+    background-color: #fff;
+    width: 50%;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* 模拟关闭按钮样式 */
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+#caozuo{
+    width: 100%;
+    height: 40px;
+    padding-top: 20px;
+}
+option {
+    background-color: #f2f2f2; /* 设置背景颜色 */
+    color: #333; /* 设置文本颜色 */
+    width: 200px;
+    border: aqua;
+}

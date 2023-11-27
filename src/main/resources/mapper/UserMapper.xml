@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ding.mapper.UserMapper">
+    <insert id="save">
+        insert into user (username,password,usertype)values (#{username},#{password},#{usertype})
+    </insert>
+    <select id="selectUserByUsername" resultType="java.lang.Boolean">
+        select count(*)>0 from `user` where username=#{username}
+    </select>
+    <select id="selectpassword" resultType="java.lang.String">
+        select password from user where username=#{username}
+    </select>
+    <select id="selectUsertype" resultType="java.lang.String">
+        select usertype from user where username=#{username}
+    </select>
+    <select id="selectUserID" resultType="java.lang.Integer">
+        select id from user where username = #{username}
+    </select>
+</mapper>

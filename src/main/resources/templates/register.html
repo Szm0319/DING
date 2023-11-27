@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" href="/css/base.css">
+  <style>
+    #registerbutton{
+      margin-left: 30px;
+      position: absolute;
+    }
+    .loginpage{
+      right: 40%;
+      top: 20%;
+      width: 250px;
+      height: 300px;
+      color: #6d70fc;
+      position: absolute;
+    }
+  </style>
+</head>
+<body>
+<div class="loginpage">
+  <h1>用户注册页面</h1>
+  <form method="post" th:action="@{/toregister}">
+    <label for="username">账号：</label>
+    <input id="username" name="username" type="text" required><br>
+    <label for="password">密码：</label>
+    <input type="password" id="password" name="password" required><br>
+    <label for="usertype">类型：</label>
+    <select id="usertype" name="usertype" required><br>
+      <option value="merchant">商家</option>
+      <option value="customer">顾客</option>
+    </select>
+    <button type="submit" id="registerbutton" >注册</button>
+  </form>
+  <script th:inline="javascript">
+    window.onload = function() {
+      var message = /*[[${message}]]*/ '';
+      if (message) {
+        alert(message);
+      }
+    };
+  </script>
+</div>
+</body>
+</html>

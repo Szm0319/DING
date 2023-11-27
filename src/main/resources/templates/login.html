@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <style>
+        #zhuce{
+            margin-top: -32px;
+            margin-left: 65%;
+            position: absolute;
+        }
+        .loginpage{
+            right: 40%;
+            top: 20%;
+            width: 250px;
+            height: 300px;
+            color: #6d70fc;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+<div class="loginpage">
+<h1>用户登录页面</h1>
+  <form method="post" th:action="@{/login}">
+    <label for="username">账号：</label>
+    <input id="username" name="username" type="text"><br>
+    <label for="password">密码：</label>
+    <input type="password" id="password" name="password"><br>
+    <button type="submit" id="loginbutton" >登录</button>
+  </form>
+  <form method="get" th:action="@{/register}" id="zhuce">
+      <button type="submit" id="registerbutton">注册</button>
+  </form>
+</div>
+  <script th:inline="javascript">
+      window.onload = function() {
+          var message = /*[[${message}]]*/ '';
+          if (message) {
+              alert(message);
+          }
+      };
+  </script>
+<script th:if="${param.message}" th:inline="javascript">
+    alert([[${param.message}]]);
+</script>
+
+</body>
+</html>

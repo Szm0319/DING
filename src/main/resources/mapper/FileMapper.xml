@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ding.mapper.FileMapper">
+    <insert id="save" parameterType="com.example.ding.entity.File">
+        INSERT INTO files (filename, filedata, cai_id) VALUES (#{filename}, #{filedata},#{cai_id})
+    </insert>
+    <select id="selectfilebyid" resultType="com.example.ding.entity.File">
+        select * from files where cai_id=#{id}
+    </select>
+    <select id="existsbyid" resultType="java.lang.Boolean">
+        select count(*)>0 from files where cai_id=#{id}
+    </select>
+</mapper>

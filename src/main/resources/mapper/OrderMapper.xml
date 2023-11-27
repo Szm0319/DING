@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.ding.mapper.OrderMapper">
+
+    <insert id="insertOrder" parameterType="com.example.ding.entity.Order">
+        insert into orders (user_id, status, order_date, total_price) values (#{user_id}, #{status}, #{order_date},#{total_price})
+    </insert>
+    <update id="updataOrderPriceByid">
+        update orders set total_price = #{total_price} where order_id = #{order_id}
+    </update>
+    <select id="selectIdbyuser" resultType="java.lang.Integer">
+        select order_id from orders where user_id = #{user_id} order by order_date desc Limit 1
+    </select>
+</mapper>

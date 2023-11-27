@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.ding.mapper.CaiMapper">
+    <insert id="insertCai" parameterType="com.example.ding.entity.Cai">
+        insert into cai(price,name,fenlei) values (#{price},#{name},#{fenlei})
+    </insert>
+    <update id="updateById"  parameterType="com.example.ding.entity.Cai">
+        update cai set price=#{price},name=#{name}
+        where id=#{id}
+    </update>
+    <delete id="deleteById" parameterType="integer">
+        delete from cai where id=#{id}
+    </delete>
+    <select id="selectById" parameterType="integer" resultType="com.example.ding.entity.Cai">
+        select * from cai where id=#{id}
+    </select>
+    <select id="selectAll" resultType="com.example.ding.entity.Cai">
+        select * from cai
+    </select>
+    <select id="selectByPage" resultType="com.example.ding.entity.Cai">
+        SELECT * FROM cai LIMIT #{size} OFFSET #{pageset}
+    </select>
+    <select id="selectNameByid" resultType="java.lang.String">
+        select name from cai where id=#{id}
+    </select>
+    <select id="selectPriceByName" resultType="java.lang.Integer">
+        select price from cai where name=#{name}
+    </select>
+</mapper>

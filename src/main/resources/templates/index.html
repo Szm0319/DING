@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Query by ID</title>
+    <style>
+        /* 居中表格 */
+        .centered-table {
+            width: 60%;
+            margin: 0 auto;
+            margin-top: 60px;
+        }
+        body{
+            text-align: center;
+        }
+        /* 表格样式 */
+        .centered-table {
+            border-collapse: collapse; /* 确保边框合并 */
+        }
+
+        .centered-table th, .centered-table td {
+            border: 1px solid black; /* 单边框 */
+            padding: 10px; /* 单元格内边距 */
+            text-align: center; /* 文本居中对齐 */
+        }
+
+
+        /* 图片样式 */
+        .centered-table img {
+            max-width: 100px; /* 图片最大宽度 */
+            max-height: 100px; /* 图片最大高度 */
+            display: block; /* 移除底部空白 */
+            margin: 0 auto; /* 图片水平居中 */
+        }
+        /* 样式化模态对话框 */
+        .modal {
+            display: none; /* 初始状态为隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+        #myModal2{
+            display: none; /* 初始状态为隐藏 */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+        .modal-content {
+            background-color: #fff;
+            width: 50%;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        /* 模拟关闭按钮样式 */
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+        #caozuo{
+            width: 100%;
+            height: 40px;
+            padding-top: 20px;
+        }
+        option {
+            background-color: #f2f2f2; /* 设置背景颜色 */
+            color: #333; /* 设置文本颜色 */
+            width: 200px;
+            border: aqua;
+        }
+
+    </style>
+</head>
+
+<body>
+<h1>Query by ID</h1>
+
+<form th:action="@{/caiinfo}" method="get">
+    <label for="id">Enter ID:</label>
+    <input type="text" id="id" name="id" />
+    <button type="submit">Submit</button>
+</form>
+<form method="get" th:action="@{/pageInfo}" id="caozuo" th:with="defaultPageNum=${pageNum != null ? pageNum : 10}">
+    <label for="pageSelect">跳转到第</label>
+    <select id="pageSelect" name="page">
+        <option th:each="pageNum : ${#numbers.sequence(1,defaultPageNum)}"
+                th:value="${pageNum}" th:text="${pageNum}">
+
+        </option>
+    </select>
+    <span>页</span>
+    <button type="submit">GO</button>
+    <span th:text="'当前为第'+${pagelocal}+'页'"></span>
+</form>
+<button id="openModalButton" th:if="${session.USERTYPE == 'merchant'}">添加菜品</button>
+
+<button id="pageinfo" onclick="page()">全部菜品</button>
+<button th:if="${session.USERTYPE == 'customer'}" id="carbutton" onclick="showcar()" type="submit">进入购物车</button></br>
+<span id="totalPriceDisplay">您目前选购的商品总价为: <span id="priceValue"></span></span>
+
+<script>
+    function page(){
+        window.location.href = '/all';
+    }
+    function showcar(){
+        fetch('/getcarinfo',{
+            method:'POST'
+        }).then(res=>res.json())
+            .then(data=>{
+                updatacar(data);
+                document.getElementById("carModal").style.display="block";
+            }).catch(err=>console.error("error",err))
+    }
+    function updatacar(carinfo){
+        const tbody = document.querySelector("#carModal .modal-content table tbody");
+        tbody.innerHTML="";
+        for(const[key,value]of Object.entries(carinfo)){
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${key}</td><td>${value}</td>`
+            tbody.appendChild(row);
+        }
+    }
+    function closeModal3() {
+        document.getElementById("carModal").style.display = 'none';
+    }
+</script>
+<!-- 模态对话框 -->
+<div id="carModal"  class="modal" style="display: none">
+    <div class="modal-content">
+        <h2>购物车</h2>
+        <span class="close-button"  id="closeModalButton3" onclick="closeModal3()">&times</span>
+        <table class="centered-table">
+            <thead>
+            <tr>
+                <th>菜名</th>
+                <th>数量</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="car :${carinfo}">
+                <td th:text="${car.key}"></td>
+                <td th:text="${car.value}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <button type="submit" th:onclick="createOrder()">提交订单</button>
+    </div>
+</div>
+<script>
+    function createOrder(){
+        fetch('/createOrder',{
+            method:'POST'
+        }).then(res=>res.json())
+            .then(res=>{document.getElementById("carModal").style.display = 'none';
+            alert(res.message);
+            document.getElementById("priceValue").textContent = res.total; // 更新价格显示
+        }).catch(err=>console.error("上传失败请重试"+err))
+    }
+</script>
+<!-- 模态对话框 -->
+<div id="myModal" class="modal" >
+    <div class="modal-content">
+        <span class="close-button" id="closeModalButton">&times;</span>
+        <h2>添加菜品</h2>
+        <form th:action="@{/change}" method="get">
+            <label for="name">菜品名称:</label>
+            <input type="text" id="name" name="name"><br><br>
+            <label for="price">菜品价格:</label>
+            <input type="text" id="price" name="price"><br><br>
+            <label for="fenlei">菜品分类:</label>
+            <input type="text" id="fenlei" name="fenlei"><br><br>
+            <button type="submit" id="saveButton">保存</button>
+        </form>
+    </div>
+</div>
+<table class="centered-table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>菜名</th>
+        <th>价格</th>
+        <th>分类</th>
+        <th>图片</th>
+        <th th:if="${session.USERTYPE == 'customer'}">购物车</th>
+        <th th:if="${session.USERTYPE == 'merchant'}">数据操作</th>
+        <th th:if="${session.USERTYPE == 'merchant'}">数据修改</th>
+        <th th:if="${session.USERTYPE == 'merchant'}">图片上传</th>
+        <th th:if="${session.USERTYPE == 'customer'}">秒杀</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="cai : ${caiList}">
+        <td th:text="${cai.id}" th:id="'cid'+cai.id"></td>
+        <td th:text="${cai.name}"></td>
+        <td th:if="${cai.zk == 1}">
+            <del th:text="'原价：' + ${cai.price}"></del>
+            <br/>
+            <span th:text="'现价：' + ${cai.zkprice}" style="color:red;"></span>
+        </td>
+        <td th:if="${cai.zk == 0}" th:text="${cai.price}"></td>
+        <td th:text="${cai.fenlei}"></td>
+        <td>
+            <img th:src="${imageURL+cai.id}" alt="菜品图片" />
+        </td>
+        <td th:if="${session.USERTYPE == 'merchant'}">
+            <form th:action="@{/update}" method="get">
+                <button th:id="'upbutton'+${cai.id}" th:data-id="${cai.id}" type="button" onclick="updata(this)">编辑</button>
+                <!-- 模态对话框 -->
+                <div th:id="'myModal2'+${cai.id}"  class="modal" style="display: none">
+                    <div class="modal-content">
+                        <span class="close-button" th:data-id="${cai.id}" th:id="'closeModalButton2'+${cai.id}" onclick="closeModal(this)">&times</span>
+                        <h2>修改菜品</h2>
+                        <form th:action="@{/change}" method="get">
+                            <label for="id">ID:</label>
+                            <input type="text" id="id2" name="id" th:value="${cai.id}" readonly="readonly"><br><br>
+                            <label for="name">菜品名称:</label>
+                            <input type="text" id="name2" name="name" th:placeholder="${cai.name}"><br><br>
+                            <label for="price">菜品价格:</label>
+                            <input type="text" id="price2" name="price" th:placeholder="${cai.price}"><br><br>
+                            <label for="fenlei">菜品分类:</label>
+                            <input type="text" id="fenlei2" name="fenlei" th:placeholder="${cai.fenlei}"><br><br>
+                            <button type="submit" id="saveButton2">保存</button>
+                        </form>
+                    </div>
+                </div>
+            </form>
+        </td>
+        <td th:if="${session.USERTYPE == 'customer'}">
+            <input type="text" th:id="carinput+${cai.id}" style="display: none" value="0">
+            <button type="button" th:id="carbutton+${cai.id}" th:data-id="${cai.id}" onclick="addcar(this)">+1</button>
+        </td>
+        <td th:if="${session.USERTYPE == 'merchant'}">
+            <button type="button" th:id="'deletebutton'+${cai.id}" th:data-id="${cai.id}" onclick="deleteCai(this)">删除</button>
+        </td>
+        <td th:if="${session.USERTYPE == 'merchant'}">
+            <button th:id="'uploadbutton'+cai.id"
+                    th:attr="onclick='document.getElementById(\'' + 'fileInput' + ${cai.id} + '\').click()'"
+                    type="button">上传文件</button>
+            <input th:id="'fileInput' + ${cai.id}" th:data-id="${cai.id}" type="file" onchange="uploadFile(this)" style="display: none">
+
+        </td>
+        <td th:if="${session.USERTYPE == 'customer'}">
+
+            <div id="countdownTimer"></div>
+
+        </td>
+    </tr>
+
+
+    <!-- 展示新的菜品数据 -->
+    <tr th:if="${newCai != null}">
+        <td th:text="${newCai.id}"></td>
+        <td th:text="${newCai.name}"></td>
+        <td th:text="${newCai.price}"></td>
+        <td th:text="${newCai.fenlei}"></td>
+        <td>
+            <img th:src="${imageURL}" alt="菜品图片" />
+        </td>
+
+    </tr>
+    <!-- 展示查询菜品数据 -->
+    <tr th:if="${caiinfo != null}">
+        <td  th:text="${caiinfo.id}"></td>
+        <td th:text="${caiinfo.name}"></td>
+        <td th:text="${caiinfo.price}"></td>
+        <td th:text="${caiinfo.fenlei}"></td>
+        <td>
+            <img th:src="${imageURL}" alt="菜品图片" />
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    // 设置目标日期和时间
+    var countDownDate = new Date("Dec 28, 2023 00:00:00").getTime();
+
+    // 更新倒计时每一秒
+    var x = setInterval(function() {
+        // 获取当前日期和时间
+        var now = new Date().getTime();
+
+        // 计算当前时间和截止时间之间的差
+        var distance = countDownDate - now;
+
+        // 时间计算（天、小时、分钟和秒）
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // 显示结果
+        document.getElementById("countdownTimer").innerHTML = days + "d " + hours + "h "
+            + minutes + "m " + seconds + "s ";
+
+        // 如果倒计时结束，写一些文本
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("countdownTimer").innerHTML = "EXPIRED";
+        }
+    }, 1000);
+</script>
+
+<script th:inline="javascript">
+    function addcar(button){
+        const caiId = button.getAttribute('data-id')
+        const input = document.getElementById("carinput"+caiId)
+        //value为字符串，需要转换
+        let cainum = parseInt(input.value,10);
+        cainum+=1;
+        const formata = new FormData
+        formata.append('id',caiId)
+        formata.append('num',cainum)
+        fetch('/car',{
+            method:'POST',
+            body:formata
+        }).then(res=>res.json()   )
+            .then(res=>{
+            console.log(res.message);
+            alert(res.message)
+        })
+    }
+    function updata(button){
+        const caiId = button.getAttribute('data-id')
+        document.getElementById("myModal2"+caiId).style.display = "block";
+    }
+    function closeModal(button){
+        const caiId = button.getAttribute('data-id')
+        document.getElementById("myModal2"+caiId).style.display = 'none';
+    }
+</script>
+<script th:inline="javascript">
+    window.onload = function() {
+        var message = /*[[${message}]]*/ '';
+        if (message) {
+            alert(message);
+        }
+    };
+</script>
+<script th:inline="javascript">
+    function deleteCai(button){
+        const cid = button.getAttribute('data-id');
+        const formdata = new FormData()
+        formdata.append('id',cid)
+        fetch('delete',{
+            method:'POST',
+            body:formdata
+        }).then(res=>res.json())
+            .then(res=>{alert(res.message)
+                location.reload();
+                })
+        console.log()
+    }
+    function updateCai(button){
+        const cid = button.getAttribute('data-id');
+        const formdata = new FormData()
+        formdata.append('id',cid)
+        fetch('/update',{
+            method:'POST',
+            body:formdata
+        }).then(res=>res.json())
+            .then(res=>{alert(res.message)
+                location.reload();
+            })
+        console.log()
+    }
+    function uploadFile(inputElement) {
+        console.log(inputElement);
+        const caiId = inputElement.getAttribute('data-id');
+        const formdata = new FormData();
+        formdata.append('file', inputElement.files[0]);
+        console.log(caiId)
+        // 获取菜品ID并添加到表单数据中
+        formdata.append('id', caiId);
+        fetch('/upload',{
+            method:'POST',
+            body:formdata
+        }).then(res=>res.json())
+            .then(res=>{
+                console.log(res)
+                alert(res.message)
+                location.reload();
+            })
+            .catch(err=>{
+                console.error("上传失败请重试"+err)
+            })
+    }
+</script>
+<script>
+    // 打开模态对话框
+    document.getElementById("openModalButton").addEventListener("click", function() {
+        document.getElementById("myModal").style.display = "block";
+    });
+
+    // 关闭模态对话框
+    document.getElementById("closeModalButton").addEventListener("click", function() {
+        document.getElementById("myModal").style.display = "none";
+    });
+
+</script>
+</body>
+</html>
