@@ -8,6 +8,9 @@
         update cai set price=#{price},name=#{name}
         where id=#{id}
     </update>
+    <update id="updateByRemainByid" parameterType="integer">
+        update cai set remain=#{remain} where id=#{id}
+    </update>
     <delete id="deleteById" parameterType="integer">
         delete from cai where id=#{id}
     </delete>
@@ -25,5 +28,8 @@
     </select>
     <select id="selectPriceByName" resultType="java.lang.Integer">
         select price from cai where name=#{name}
+    </select>
+    <select id="selectRemainByName" resultType="java.lang.Integer">
+        select remain from cai where name=#{name}
     </select>
 </mapper>

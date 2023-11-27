@@ -39,7 +39,6 @@ public class CaiController {
     }
     @GetMapping("/image")
     public ResponseEntity<ByteArrayResource> queryResult(@RequestParam("id") int id) {
-        System.out.println(id);
         File file = fileService.selectfilebyid(id);
         ByteArrayResource resource = new ByteArrayResource(file.getFiledata());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);

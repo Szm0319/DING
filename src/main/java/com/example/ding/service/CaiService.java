@@ -30,4 +30,8 @@ public interface CaiService extends CaiMapper{
 
     int selectPriceByName(String name);
 
+    int selectRemainByName(String name);
+
+    void updateByRemainByid(int id,int remain);
+
 }

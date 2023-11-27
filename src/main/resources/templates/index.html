@@ -194,7 +194,6 @@
         <th th:if="${session.USERTYPE == 'merchant'}">数据操作</th>
         <th th:if="${session.USERTYPE == 'merchant'}">数据修改</th>
         <th th:if="${session.USERTYPE == 'merchant'}">图片上传</th>
-        <th th:if="${session.USERTYPE == 'customer'}">秒杀</th>
     </tr>
     </thead>
     <tbody>
@@ -234,9 +233,14 @@
                 </div>
             </form>
         </td>
-        <td th:if="${session.USERTYPE == 'customer'}">
+        <td th:if="${session.USERTYPE == 'customer' and cai.zk == 0}" >
             <input type="text" th:id="carinput+${cai.id}" style="display: none" value="0">
-            <button type="button" th:id="carbutton+${cai.id}" th:data-id="${cai.id}" onclick="addcar(this)">+1</button>
+            <button type="button" th:id="carbutton+${cai.id}" th:data-id="${cai.id}" onclick="addcar(this)">添加</button>
+        </td>
+        <td th:if="${session.USERTYPE == 'customer' and cai.zk == 1}">
+            <input type="text" th:id="carinput+${cai.id}" style="display: none" value="0">
+            <div th:id="'countdownTimer'+${cai.id}"></div>
+            <button style="display: none;" type="button" th:id="zkbutton+${cai.id}" th:data-id="${cai.id}" onclick="addcar(this)">立即抢购</button>
         </td>
         <td th:if="${session.USERTYPE == 'merchant'}">
             <button type="button" th:id="'deletebutton'+${cai.id}" th:data-id="${cai.id}" onclick="deleteCai(this)">删除</button>
@@ -246,11 +250,6 @@
                     th:attr="onclick='document.getElementById(\'' + 'fileInput' + ${cai.id} + '\').click()'"
                     type="button">上传文件</button>
             <input th:id="'fileInput' + ${cai.id}" th:data-id="${cai.id}" type="file" onchange="uploadFile(this)" style="display: none">
-
-        </td>
-        <td th:if="${session.USERTYPE == 'customer'}">
-
-            <div id="countdownTimer"></div>
 
         </td>
     </tr>
@@ -280,33 +279,36 @@
     </tbody>
 </table>
 <script>
-    // 设置目标日期和时间
-    var countDownDate = new Date("Dec 28, 2023 00:00:00").getTime();
+    function startCountdown(caiId) {
+        // 设置定时五分钟
+        var countDownDate = new Date().getTime()+10000;
 
-    // 更新倒计时每一秒
-    var x = setInterval(function() {
-        // 获取当前日期和时间
-        var now = new Date().getTime();
+        // 更新倒计时每一秒
+        var x = setInterval(function() {
+            // 获取当前日期和时间
+            var now = new Date().getTime();
 
-        // 计算当前时间和截止时间之间的差
-        var distance = countDownDate - now;
+            // 计算当前时间和截止时间之间的差
+            var distance = countDownDate - now;
 
-        // 时间计算（天、小时、分钟和秒）
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            // 时间计算（天、小时、分钟和秒）
+            // var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            // var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // 显示结果
-        document.getElementById("countdownTimer").innerHTML = days + "d " + hours + "h "
-            + minutes + "m " + seconds + "s ";
+            // 显示结果
+            document.getElementById("countdownTimer"+caiId).innerHTML ="抢购倒计时:"+minutes + "分 " + seconds + "秒 ";
 
-        // 如果倒计时结束，写一些文本
-        if (distance < 0) {
-            clearInterval(x);
-            document.getElementById("countdownTimer").innerHTML = "EXPIRED";
-        }
-    }, 1000);
+            // 如果倒计时结束，写一些文本
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdownTimer"+caiId).innerHTML = ""; // 清空倒计时
+                document.getElementById("zkbutton"+caiId).style.display = "block"; // 显示抢购按钮
+            }
+        }, 1000);}
+    startCountdown(35)
+    startCountdown(33)
 </script>
 
 <script th:inline="javascript">

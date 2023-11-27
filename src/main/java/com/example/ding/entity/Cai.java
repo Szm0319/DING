@@ -13,4 +13,6 @@ public class Cai {
     private String image;
     private int zk;
     private double zkprice;
+
+    private int remain;
 }

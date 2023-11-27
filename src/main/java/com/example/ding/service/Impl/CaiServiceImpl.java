@@ -50,4 +50,12 @@ public class CaiServiceImpl implements CaiService {
     public int selectPriceByName(String name) {
         return caiMapper.selectPriceByName(name);
     }
+
+    public int selectRemainByName(String name){
+        return caiMapper.selectRemainByName(name);
+    }
+
+    public void updateByRemainByid(int id,int remain){
+        caiMapper.updateByRemainByid(id,remain);
+    }
 }

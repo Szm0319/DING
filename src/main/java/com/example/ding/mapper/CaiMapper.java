@@ -20,4 +20,8 @@ public interface CaiMapper {
     String selectNameByid(int id);
 
     int selectPriceByName(String name);
+
+    int selectRemainByName(String name);
+
+    void updateByRemainByid(int id,int remain);
 }
