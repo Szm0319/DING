@@ -64,7 +64,7 @@ public class CarController {
             }
 
             if (remain < num) {
-                response.put("message", "库存不足");
+                response.put("message", "没抢着~哈哈");
                 return ResponseEntity.badRequest().body(response);
             }
             // 更新Redis中的购物车数据
