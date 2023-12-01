@@ -23,4 +23,10 @@ public class OrderServiceImpl implements OrderService {
     public void updataOrderPriceByid(int order_id,int total_price) {
         orderMapper.updataOrderPriceByid(order_id,total_price);
     }
+
+    @Override
+    public double selectPriceByid(int oder_id) {
+        return orderMapper.selectPriceByid(oder_id);
+    }
+
 }

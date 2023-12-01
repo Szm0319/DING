@@ -13,4 +13,7 @@
     <select id="selectIdbyuser" resultType="java.lang.Integer">
         select order_id from orders where user_id = #{user_id} order by order_date desc Limit 1
     </select>
+    <select id="selectPriceByid" resultType="java.lang.Double">
+        select totalprice form orders where order_id=#{order_id} order by order_date desc Limit 1
+    </select>
 </mapper>

@@ -9,4 +9,5 @@ public interface OrderMapper {
     int selectIdbyuser(int user_id);
 
     void updataOrderPriceByid(int order_id,int total_price);
+    double selectPriceByid(int oder_id);
 }

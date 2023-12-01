@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import static ch.qos.logback.core.util.StatusPrinter.print;
@@ -16,9 +17,5 @@ import static ch.qos.logback.core.util.StatusPrinter.print;
 public class DingApplication {
     public static void main(String[] args) {
         SpringApplication.run(DingApplication.class, args);
-    }
-    @RequestMapping("/hello")
-    public String hello(){
-        return "hello111";
     }
 }
